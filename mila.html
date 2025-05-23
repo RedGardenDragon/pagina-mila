@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Horario Editable</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #000;
+      text-align: center;
+      padding: 8px;
+      min-width: 80px;
+    }
+    th[contenteditable="true"] {
+      background-color: #e0ffe0;
+    }
+    td[contenteditable="true"] {
+      background-color: #fefefe;
+    }
+    .day-header td {
+      background-color: #39ff14;
+      font-weight: bold;
+      text-align: left;
+    }
+    .time-block {
+      background-color: #f9f9f9;
+    }
+    #exportBtn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Horario Editable</h2>
+<table id="horario">
+  <thead>
+    <tr>
+      <th contenteditable="true">Día</th>
+      <th contenteditable="true">Estrella</th>
+      <th contenteditable="true">Ana</th>
+      <th contenteditable="true">Pilar</th>
+      <th contenteditable="true">Ayala</th>
+      <th contenteditable="true">Ángeles</th>
+      <th contenteditable="true">Ana Suplente</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="day-header"><td colspan="7" contenteditable="true">Lunes 19</td></tr>
+    <tr>
+      <td class="time-block">8-10</td>
+      <td contenteditable="true">U.LIN</td>
+      <td contenteditable="true">3C</td>
+      <td contenteditable="true">E.FÍSIC</td>
+      <td contenteditable="true">9:30-11 IRBEL</td>
+      <td contenteditable="true">10-11 ROSANA</td>
+      <td contenteditable="true">10-11 PILAR</td>
+    </tr>
+    <tr>
+      <td class="time-block">10-11</td>
+      <td contenteditable="true">FRANCHELI</td>
+      <td contenteditable="true">MATEO</td>
+      <td contenteditable="true">U.LIN</td>
+      <td contenteditable="true">OFELIA</td>
+      <td contenteditable="true">11:30-12:30 KAPE</td>
+      <td contenteditable="true">11-12 CARMEN</td>
+    </tr>
+    <tr>
+      <td class="time-block">11-12</td>
+      <td contenteditable="true">PETRA</td>
+      <td contenteditable="true">JUANA</td>
+      <td contenteditable="true">ADELA</td>
+      <td contenteditable="true">12:30-13:30 PILAR</td>
+      <td></td>
+      <td contenteditable="true">12-13 MERCEDES</td>
+    </tr>
+    <tr>
+      <td class="time-block">12-13</td>
+      <td></td>
+      <td contenteditable="true">ADORACIÓN</td>
+      <td contenteditable="true">ADELA</td>
+      <td></td>
+      <td></td>
+      <td contenteditable="true">1h GIMNASIO</td>
+    </tr>
+  </tbody>
+</table>
+
+<button id="exportBtn">Exportar a Excel</button>
+
+<script>
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    const wb = XLSX.utils.book_new();
+    const ws_data = [];
+
+    const table = document.getElementById("horario");
+    const rows = table.querySelectorAll("tr");
+
+    rows.forEach(row => {
+      const rowData = [];
+      const cells = row.querySelectorAll("th, td");
+      cells.forEach(cell => {
+        rowData.push(cell.innerText.trim());
+      });
+      ws_data.push(rowData);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(wb, ws, "Horario");
+    XLSX.writeFile(wb, "horario.xlsx");
+  });
+</script>
+
+</body>
+</html>
